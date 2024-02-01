@@ -1,0 +1,117 @@
+cidl: "0.8"
+info:
+  name: hive_news
+  title: hive News
+  version: 0.0.1
+  summary: |
+    The purpose of this contract is to track the upvote and downvote action in the news decentralized authenticable application. It will manage user, news and votes for the solution.
+  contact:
+    name: Vandyck Lai
+    web: https://vandycklai.dev
+    email: vandycklai@gmail.com
+    git: https://github.com/Laikaiyong
+  license:
+    name: MIT
+    url: https://opensource.org/license/mit
+types:
+  User:
+    summary: |
+      This data structure will store user information
+    fields:
+      - name: display_name
+        type: string
+        solana:
+          attributes: [ cap:36 ]
+      - name: news
+        type: u16
+  News:
+    summary: This data structure will store news
+    fields:
+      - name: title
+        type: string
+        solana:
+          attributes: [ cap:96 ]
+      - name: short_description
+        type: string
+        solana:
+          attributes: [ cap:255 ]
+      - name: feature_image_url
+        type: string
+        solana:
+          attributes: [ cap:96 ]
+      - name: content_url
+        type: string
+        solana:
+          attributes: [ cap:96 ]
+      - name: category
+        type: string
+        solana:
+          attributes: [ cap:36 ]
+      - name: upvotes
+        type: u32
+      - name: downvotes
+        type: u32
+      - name: author
+        type: sol:pubkey
+  Votes:
+    summary: This data structure will store votes
+    fields:
+      - name: user
+        type: sol:pubkey
+      - name: news
+        type: sol:pubkey
+      - name: value
+        type: u32
+methods:
+  - name: create_user_account
+    summary: Method used to initialize the User account.
+    inputs:
+      - name: user
+        type: User
+        solana:
+          attributes: [ init ]
+      - name: display_name
+        type: string
+  - name: create_news_account
+    summary: Method used to initialize a News account.
+    inputs:
+      - name: news
+        type: News
+        solana:
+          attributes: [ init ]
+      - name: title
+        type: string
+      - name: short_description
+        type: string
+      - name: feature_image_url
+        type: string
+      - name: content_url
+        type: string
+      - name: category
+        type: string
+      - name: author
+        type: sol:pubkey
+  - name: create_upvote_account
+    inputs:
+      - name: vote
+        type: Votes
+        solana:
+          attributes: [ init ]
+      - name: user
+        type: User
+      - name: news
+        type: News
+      - name: value
+        type: u32
+  - name: create_downvote_account
+    inputs:
+      - name: vote
+        type: Votes
+        solana:
+          attributes: [ init ]
+      - name: user
+        type: User
+      - name: news
+        type: News
+      - name: value
+        type: u32
