@@ -12,7 +12,7 @@ pub enum HiveNewsInstruction {
 ///
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` user: [User] 
+/// 1. `[writable]` user: [User] 
 /// 2. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
@@ -23,8 +23,9 @@ pub enum HiveNewsInstruction {
 ///
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` news: [News] 
-/// 2. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` news: [News] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - title: [String] 
@@ -32,29 +33,35 @@ pub enum HiveNewsInstruction {
 /// - feature_image_url: [String] 
 /// - content_url: [String] 
 /// - category: [String] 
-/// - author: [Pubkey] 
+/// - news_seed_index: [u16] Auto-generated, from input news of type [News] set the seed named index, required by the type
 	CreateNewsAccount(CreateNewsAccountArgs),
 
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` vote: [Votes] 
-/// 2. `[]` user: [User] 
-/// 3. `[]` news: [News] 
-/// 4. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` vote: [Votes] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[writable]` news: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 4. `[]` newsitem: [News] 
+/// 5. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - value: [u32] 
+/// - newsitem_seed_user: [Pubkey] Auto-generated, from input newsitem of type [News] set the seed named user, required by the type
+/// - newsitem_seed_index: [u16] Auto-generated, from input newsitem of type [News] set the seed named index, required by the type
 	CreateUpvoteAccount(CreateUpvoteAccountArgs),
 
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` vote: [Votes] 
-/// 2. `[]` user: [User] 
-/// 3. `[]` news: [News] 
-/// 4. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` vote: [Votes] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[writable]` news: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 4. `[]` newsitem: [News] 
+/// 5. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - value: [u32] 
+/// - newsitem_seed_user: [Pubkey] Auto-generated, from input newsitem of type [News] set the seed named user, required by the type
+/// - newsitem_seed_index: [u16] Auto-generated, from input newsitem of type [News] set the seed named index, required by the type
 	CreateDownvoteAccount(CreateDownvoteAccountArgs),
 
 }
@@ -71,17 +78,21 @@ pub struct CreateNewsAccountArgs {
 	pub feature_image_url: String,
 	pub content_url: String,
 	pub category: String,
-	pub author: Pubkey,
+	pub news_seed_index: u16,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct CreateUpvoteAccountArgs {
 	pub value: u32,
+	pub newsitem_seed_user: Pubkey,
+	pub newsitem_seed_index: u16,
 }
 
 #[derive(BorshSerialize, BorshDeserialize, Debug)]
 pub struct CreateDownvoteAccountArgs {
 	pub value: u32,
+	pub newsitem_seed_user: Pubkey,
+	pub newsitem_seed_index: u16,
 }
 
 impl HiveNewsInstruction {

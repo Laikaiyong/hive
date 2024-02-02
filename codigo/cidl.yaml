@@ -24,6 +24,9 @@ types:
           attributes: [ cap:36 ]
       - name: news
         type: u16
+    solana:
+      seeds:
+        - name: user
   News:
     summary: This data structure will store news
     fields:
@@ -51,8 +54,15 @@ types:
         type: u32
       - name: downvotes
         type: u32
-      - name: author
+      - name: user
         type: sol:pubkey
+    solana:
+      seeds:
+        - name: news
+        - name: user
+          type: sol:pubkey
+        - name: index
+          type: u16
   Votes:
     summary: This data structure will store votes
     fields:
@@ -62,6 +72,9 @@ types:
         type: sol:pubkey
       - name: value
         type: u32
+    solana:
+      seeds:
+        - name: vote
 methods:
   - name: create_user_account
     summary: Method used to initialize the User account.
@@ -78,7 +91,9 @@ methods:
       - name: news
         type: News
         solana:
-          attributes: [ init ]
+          attributes: [ mut, init ]
+          seeds:
+            user: user
       - name: title
         type: string
       - name: short_description
@@ -89,8 +104,11 @@ methods:
         type: string
       - name: category
         type: string
-      - name: author
-        type: sol:pubkey
+      - name: user
+        type: sol:account_info
+        description: This will be the account that has permission to update the broker and approved request.
+        solana:
+          attributes: [ mut ]
   - name: create_upvote_account
     inputs:
       - name: vote
@@ -98,8 +116,16 @@ methods:
         solana:
           attributes: [ init ]
       - name: user
-        type: User
+        type: sol:account_info
+        description: This will be the account that has permission to update the broker and approved request.
+        solana:
+          attributes: [ mut ]
       - name: news
+        type: sol:account_info
+        description: This will be the account that has permission to update the broker and approved request.
+        solana:
+          attributes: [ mut ]
+      - name: newsitem
         type: News
       - name: value
         type: u32
@@ -110,8 +136,16 @@ methods:
         solana:
           attributes: [ init ]
       - name: user
-        type: User
+        type: sol:account_info
+        description: This will be the account that has permission to update the broker and approved request.
+        solana:
+          attributes: [ mut ]
       - name: news
+        type: sol:account_info
+        description: This will be the account that has permission to update the broker and approved request.
+        solana:
+          attributes: [ mut ]
+      - name: newsitem
         type: News
       - name: value
         type: u32

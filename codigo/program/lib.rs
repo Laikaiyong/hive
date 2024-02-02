@@ -3,4 +3,4 @@
 
 pub mod generated;
 pub mod src;
-// pub mod test;
+pub mod test;

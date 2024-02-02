@@ -52,7 +52,7 @@ pub struct News {
 	pub category: String,
 	pub upvotes: u32,
 	pub downvotes: u32,
-	pub author: Pubkey,
+	pub user: Pubkey,
 }
 
 impl News {

@@ -54,7 +54,7 @@ impl Processor {
 					args.feature_image_url,
 					args.content_url,
 					args.category,
-					args.author,
+					args.news_seed_index,
 				)
 			}
 			HiveNewsInstruction::CreateUpvoteAccount(args) => {
@@ -63,6 +63,8 @@ impl Processor {
 					program_id,
 					accounts, 
 					args.value,
+					args.newsitem_seed_user,
+					args.newsitem_seed_index,
 				)
 			}
 			HiveNewsInstruction::CreateDownvoteAccount(args) => {
@@ -71,6 +73,8 @@ impl Processor {
 					program_id,
 					accounts, 
 					args.value,
+					args.newsitem_seed_user,
+					args.newsitem_seed_index,
 				)
 			}
         }
@@ -80,7 +84,7 @@ impl Processor {
 ///
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` user: [User] 
+/// 1. `[writable]` user: [User] 
 /// 2. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
@@ -95,14 +99,19 @@ impl Processor {
 		let user_info = next_account_info(account_info_iter)?;
 		let system_program_info = next_account_info(account_info_iter)?;
 
+		// Derive PDAs
+		let (user_pubkey, user_bump) = Pubkey::find_program_address(
+			&[b"user"],
+			program_id,
+		);
 
 		// Security Checks
 		if fee_payer_info.is_signer != true {
 			return Err(HiveNewsError::InvalidSignerPermission.into());
 		}
 
-		if user_info.is_signer != true {
-			return Err(HiveNewsError::InvalidSignerPermission.into());
+		if *user_info.key != user_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
 		}
 
 		if *system_program_info.key != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
@@ -115,7 +124,7 @@ impl Processor {
 		let rent = Rent::get()?;
 		let rent_minimum_balance = rent.minimum_balance(space);
 
-		invoke(
+		invoke_signed(
 			&create_account(
 				&fee_payer_info.key,
 				&user_info.key,
@@ -124,15 +133,12 @@ impl Processor {
 				program_id,
 			),
 			&[fee_payer_info.clone(), user_info.clone()],
+			&[&[b"user", &[user_bump]]],
 		)?;
 
 
 		// Security Checks
 		if *fee_payer_info.owner != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *user_info.owner != *program_id {
 			return Err(HiveNewsError::WrongAccountOwner.into());
 		}
 
@@ -142,9 +148,10 @@ impl Processor {
 
 
 		// Accounts Deserialization
-		let user = &mut Account::new(
+		let user = &mut AccountPDA::new(
 			&user_info,
 			try_from_slice_unchecked::<User>(&user_info.data.borrow()).unwrap(),
+			user_bump,
 		);
 
 		// Calling STUB
@@ -164,8 +171,9 @@ impl Processor {
 ///
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` news: [News] 
-/// 2. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` news: [News] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - title: [String] 
@@ -173,7 +181,7 @@ impl Processor {
 /// - feature_image_url: [String] 
 /// - content_url: [String] 
 /// - category: [String] 
-/// - author: [Pubkey] 
+/// - news_seed_index: [u16] Auto-generated, from input news of type [News] set the seed named index, required by the type
 	pub fn process_create_news_account(
 		program_id: &Pubkey,
 		accounts: &[AccountInfo],
@@ -182,21 +190,27 @@ impl Processor {
 		feature_image_url: String,
 		content_url: String,
 		category: String,
-		author: Pubkey,
+		news_seed_index: u16,
 	) -> ProgramResult {
 		let account_info_iter = &mut accounts.iter();
 		let fee_payer_info = next_account_info(account_info_iter)?;
 		let news_info = next_account_info(account_info_iter)?;
+		let user_info = next_account_info(account_info_iter)?;
 		let system_program_info = next_account_info(account_info_iter)?;
 
+		// Derive PDAs
+		let (news_pubkey, news_bump) = Pubkey::find_program_address(
+			&[b"news", user_info.key.as_ref(), news_seed_index.to_le_bytes().as_ref()],
+			program_id,
+		);
 
 		// Security Checks
 		if fee_payer_info.is_signer != true {
 			return Err(HiveNewsError::InvalidSignerPermission.into());
 		}
 
-		if news_info.is_signer != true {
-			return Err(HiveNewsError::InvalidSignerPermission.into());
+		if *news_info.key != news_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
 		}
 
 		if *system_program_info.key != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
@@ -209,7 +223,7 @@ impl Processor {
 		let rent = Rent::get()?;
 		let rent_minimum_balance = rent.minimum_balance(space);
 
-		invoke(
+		invoke_signed(
 			&create_account(
 				&fee_payer_info.key,
 				&news_info.key,
@@ -218,15 +232,12 @@ impl Processor {
 				program_id,
 			),
 			&[fee_payer_info.clone(), news_info.clone()],
+			&[&[b"news", user_info.key.as_ref(), news_seed_index.to_le_bytes().as_ref(), &[news_bump]]],
 		)?;
 
 
 		// Security Checks
 		if *fee_payer_info.owner != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *news_info.owner != *program_id {
 			return Err(HiveNewsError::WrongAccountOwner.into());
 		}
 
@@ -236,21 +247,22 @@ impl Processor {
 
 
 		// Accounts Deserialization
-		let news = &mut Account::new(
+		let news = &mut AccountPDA::new(
 			&news_info,
 			try_from_slice_unchecked::<News>(&news_info.data.borrow()).unwrap(),
+			news_bump,
 		);
 
 		// Calling STUB
 		create_news_account::create_news_account(
 			program_id,
 			news,
+			user_info,
 			title,
 			short_description,
 			feature_image_url,
 			content_url,
 			category,
-			author,
 		)?;
 
 		// Accounts Serialization
@@ -261,33 +273,52 @@ impl Processor {
 
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` vote: [Votes] 
-/// 2. `[]` user: [User] 
-/// 3. `[]` news: [News] 
-/// 4. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` vote: [Votes] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[writable]` news: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 4. `[]` newsitem: [News] 
+/// 5. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - value: [u32] 
+/// - newsitem_seed_user: [Pubkey] Auto-generated, from input newsitem of type [News] set the seed named user, required by the type
+/// - newsitem_seed_index: [u16] Auto-generated, from input newsitem of type [News] set the seed named index, required by the type
 	pub fn process_create_upvote_account(
 		program_id: &Pubkey,
 		accounts: &[AccountInfo],
 		value: u32,
+		newsitem_seed_user: Pubkey,
+		newsitem_seed_index: u16,
 	) -> ProgramResult {
 		let account_info_iter = &mut accounts.iter();
 		let fee_payer_info = next_account_info(account_info_iter)?;
 		let vote_info = next_account_info(account_info_iter)?;
 		let user_info = next_account_info(account_info_iter)?;
 		let news_info = next_account_info(account_info_iter)?;
+		let newsitem_info = next_account_info(account_info_iter)?;
 		let system_program_info = next_account_info(account_info_iter)?;
 
+		// Derive PDAs
+		let (vote_pubkey, vote_bump) = Pubkey::find_program_address(
+			&[b"vote"],
+			program_id,
+		);
+		let (newsitem_pubkey, newsitem_bump) = Pubkey::find_program_address(
+			&[b"news", newsitem_seed_user.as_ref(), newsitem_seed_index.to_le_bytes().as_ref()],
+			program_id,
+		);
 
 		// Security Checks
 		if fee_payer_info.is_signer != true {
 			return Err(HiveNewsError::InvalidSignerPermission.into());
 		}
 
-		if vote_info.is_signer != true {
-			return Err(HiveNewsError::InvalidSignerPermission.into());
+		if *vote_info.key != vote_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
+		}
+
+		if *newsitem_info.key != newsitem_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
 		}
 
 		if *system_program_info.key != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
@@ -300,7 +331,7 @@ impl Processor {
 		let rent = Rent::get()?;
 		let rent_minimum_balance = rent.minimum_balance(space);
 
-		invoke(
+		invoke_signed(
 			&create_account(
 				&fee_payer_info.key,
 				&vote_info.key,
@@ -309,6 +340,7 @@ impl Processor {
 				program_id,
 			),
 			&[fee_payer_info.clone(), vote_info.clone()],
+			&[&[b"vote", &[vote_bump]]],
 		)?;
 
 
@@ -317,51 +349,34 @@ impl Processor {
 			return Err(HiveNewsError::WrongAccountOwner.into());
 		}
 
-		if *vote_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *user_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *news_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
 		if vote_info.data_len() != Votes::LEN {
 			return Err(HiveNewsError::InvalidAccountLen.into());
 		}
 
-		if user_info.data_len() != User::LEN {
-			return Err(HiveNewsError::InvalidAccountLen.into());
-		}
-
-		if news_info.data_len() != News::LEN {
+		if newsitem_info.data_len() != News::LEN {
 			return Err(HiveNewsError::InvalidAccountLen.into());
 		}
 
 
 		// Accounts Deserialization
-		let vote = &mut Account::new(
+		let vote = &mut AccountPDA::new(
 			&vote_info,
 			try_from_slice_unchecked::<Votes>(&vote_info.data.borrow()).unwrap(),
+			vote_bump,
 		);
-		let user = Account::new(
-			&user_info,
-			try_from_slice_unchecked::<User>(&user_info.data.borrow()).unwrap(),
-		);
-		let news = Account::new(
-			&news_info,
-			try_from_slice_unchecked::<News>(&news_info.data.borrow()).unwrap(),
+		let newsitem = AccountPDA::new(
+			&newsitem_info,
+			try_from_slice_unchecked::<News>(&newsitem_info.data.borrow()).unwrap(),
+			newsitem_bump,
 		);
 
 		// Calling STUB
 		create_upvote_account::create_upvote_account(
 			program_id,
 			vote,
-			&user,
-			&news,
+			user_info,
+			news_info,
+			&newsitem,
 			value,
 		)?;
 
@@ -373,33 +388,52 @@ impl Processor {
 
 /// Accounts:
 /// 0. `[writable, signer]` fee_payer: [AccountInfo] Auto-generated, default fee payer
-/// 1. `[writable, signer]` vote: [Votes] 
-/// 2. `[]` user: [User] 
-/// 3. `[]` news: [News] 
-/// 4. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
+/// 1. `[writable]` vote: [Votes] 
+/// 2. `[writable]` user: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 3. `[writable]` news: [AccountInfo] This will be the account that has permission to update the broker and approved request.
+/// 4. `[]` newsitem: [News] 
+/// 5. `[]` system_program: [AccountInfo] Auto-generated, for account initialization
 ///
 /// Data:
 /// - value: [u32] 
+/// - newsitem_seed_user: [Pubkey] Auto-generated, from input newsitem of type [News] set the seed named user, required by the type
+/// - newsitem_seed_index: [u16] Auto-generated, from input newsitem of type [News] set the seed named index, required by the type
 	pub fn process_create_downvote_account(
 		program_id: &Pubkey,
 		accounts: &[AccountInfo],
 		value: u32,
+		newsitem_seed_user: Pubkey,
+		newsitem_seed_index: u16,
 	) -> ProgramResult {
 		let account_info_iter = &mut accounts.iter();
 		let fee_payer_info = next_account_info(account_info_iter)?;
 		let vote_info = next_account_info(account_info_iter)?;
 		let user_info = next_account_info(account_info_iter)?;
 		let news_info = next_account_info(account_info_iter)?;
+		let newsitem_info = next_account_info(account_info_iter)?;
 		let system_program_info = next_account_info(account_info_iter)?;
 
+		// Derive PDAs
+		let (vote_pubkey, vote_bump) = Pubkey::find_program_address(
+			&[b"vote"],
+			program_id,
+		);
+		let (newsitem_pubkey, newsitem_bump) = Pubkey::find_program_address(
+			&[b"news", newsitem_seed_user.as_ref(), newsitem_seed_index.to_le_bytes().as_ref()],
+			program_id,
+		);
 
 		// Security Checks
 		if fee_payer_info.is_signer != true {
 			return Err(HiveNewsError::InvalidSignerPermission.into());
 		}
 
-		if vote_info.is_signer != true {
-			return Err(HiveNewsError::InvalidSignerPermission.into());
+		if *vote_info.key != vote_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
+		}
+
+		if *newsitem_info.key != newsitem_pubkey {
+			return Err(HiveNewsError::NotExpectedAddress.into());
 		}
 
 		if *system_program_info.key != Pubkey::from_str("11111111111111111111111111111111").unwrap() {
@@ -412,7 +446,7 @@ impl Processor {
 		let rent = Rent::get()?;
 		let rent_minimum_balance = rent.minimum_balance(space);
 
-		invoke(
+		invoke_signed(
 			&create_account(
 				&fee_payer_info.key,
 				&vote_info.key,
@@ -421,6 +455,7 @@ impl Processor {
 				program_id,
 			),
 			&[fee_payer_info.clone(), vote_info.clone()],
+			&[&[b"vote", &[vote_bump]]],
 		)?;
 
 
@@ -429,51 +464,34 @@ impl Processor {
 			return Err(HiveNewsError::WrongAccountOwner.into());
 		}
 
-		if *vote_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *user_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
-		if *news_info.owner != *program_id {
-			return Err(HiveNewsError::WrongAccountOwner.into());
-		}
-
 		if vote_info.data_len() != Votes::LEN {
 			return Err(HiveNewsError::InvalidAccountLen.into());
 		}
 
-		if user_info.data_len() != User::LEN {
-			return Err(HiveNewsError::InvalidAccountLen.into());
-		}
-
-		if news_info.data_len() != News::LEN {
+		if newsitem_info.data_len() != News::LEN {
 			return Err(HiveNewsError::InvalidAccountLen.into());
 		}
 
 
 		// Accounts Deserialization
-		let vote = &mut Account::new(
+		let vote = &mut AccountPDA::new(
 			&vote_info,
 			try_from_slice_unchecked::<Votes>(&vote_info.data.borrow()).unwrap(),
+			vote_bump,
 		);
-		let user = Account::new(
-			&user_info,
-			try_from_slice_unchecked::<User>(&user_info.data.borrow()).unwrap(),
-		);
-		let news = Account::new(
-			&news_info,
-			try_from_slice_unchecked::<News>(&news_info.data.borrow()).unwrap(),
+		let newsitem = AccountPDA::new(
+			&newsitem_info,
+			try_from_slice_unchecked::<News>(&newsitem_info.data.borrow()).unwrap(),
+			newsitem_bump,
 		);
 
 		// Calling STUB
 		create_downvote_account::create_downvote_account(
 			program_id,
 			vote,
-			&user,
-			&news,
+			user_info,
+			news_info,
+			&newsitem,
 			value,
 		)?;
 
