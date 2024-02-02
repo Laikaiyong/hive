@@ -30,12 +30,17 @@ mod create_news_account {
 		let feature_image_url: String = Default::default();
 		let content_url: String = Default::default();
 		let category: String = Default::default();
-		let author: Pubkey = Pubkey::new_unique();
+		let news_seed_index: u16 = Default::default();
 
-		let news_info = Keypair::new();
+		let user_info = Keypair::new();
+		let (news_pubkey, _) = Pubkey::find_program_address(
+			&[b"news", user_info.pubkey().as_ref(), news_seed_index.to_le_bytes().as_ref()],
+			&program_id,
+		);
 		let accounts = vec![
 			AccountMeta::new(fee_payer_info.pubkey(), true),
-			AccountMeta::new(news_info.pubkey(), true),
+			AccountMeta::new(news_pubkey, false),
+			AccountMeta::new(user_info.pubkey(), false),
 			AccountMeta::new_readonly(system_program::id(), false),
 		];
 		let data = HiveNewsInstruction::CreateNewsAccount(crate::generated::instructions::CreateNewsAccountArgs{
@@ -44,13 +49,13 @@ mod create_news_account {
 			feature_image_url,
 			content_url,
 			category,
-			author,
+			news_seed_index,
 		});
 		let signers = vec![
 			&fee_payer_info,
-			&news_info,
         ];
 
+		create_account(&rpc_client, &fee_payer_info, &user_info, &program_id, 0);
 
         let instruction = Instruction::new_with_borsh(program_id, &data, accounts.to_vec());
 		let recent_blockhash = rpc_client.get_latest_blockhash().unwrap();

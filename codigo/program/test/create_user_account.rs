@@ -27,10 +27,13 @@ mod create_user_account {
 
 		let display_name: String = Default::default();
 
-		let user_info = Keypair::new();
+		let (user_pubkey, _) = Pubkey::find_program_address(
+			&[b"user"],
+			&program_id,
+		);
 		let accounts = vec![
 			AccountMeta::new(fee_payer_info.pubkey(), true),
-			AccountMeta::new(user_info.pubkey(), true),
+			AccountMeta::new(user_pubkey, false),
 			AccountMeta::new_readonly(system_program::id(), false),
 		];
 		let data = HiveNewsInstruction::CreateUserAccount(crate::generated::instructions::CreateUserAccountArgs{
@@ -38,7 +41,6 @@ mod create_user_account {
 		});
 		let signers = vec![
 			&fee_payer_info,
-			&user_info,
         ];
 
 

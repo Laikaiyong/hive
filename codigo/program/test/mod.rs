@@ -37,5 +37,3 @@ pub fn create_account(
 
 pub mod create_user_account;
 pub mod create_news_account;
-pub mod create_upvote_account;
-pub mod create_downvote_account;
