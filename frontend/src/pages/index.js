@@ -4,6 +4,9 @@ import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser } f
 import { Accordion, Carousel, Card, Sidebar, Badge, Timeline } from "flowbite-react";
 import CustomSidebar from "../components/custom-sidebar";
 
+import { Transaction, PublicKey } from '@solana/web3.js';
+
+
 const pageStyles = {
   color: "#232129",
   padding: 96,

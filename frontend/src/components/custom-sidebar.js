@@ -1,11 +1,33 @@
 import * as React from "react";
 import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser } from 'react-icons/hi';
 import { Sidebar, Badge } from "flowbite-react";
+
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+import { Wallet } from "./connect-wallet-context";
+import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
+import {
+  clusterApiUrl,
+  Transaction,
+  SystemProgram,
+  Keypair,
+  LAMPORTS_PER_SOL,
+  PublicKey,
+} from "@solana/web3.js";
+
 const CustomSidebar = () => {
+  const { connection } = useConnection();
+  const { publicKey, sendTransaction } = useWallet();
+
+
   return (
+    <Wallet>
     <Sidebar id="sidebar" className="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full font-normal duration-75 lg:flex transition-width" aria-label="Sidebar">
     <Sidebar.Logo href="/" img="../images/hive.png" imgAlt="hive logo">
       </Sidebar.Logo>
+      <WalletMultiButton />
+      
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="/" icon={HiChartPie}>
@@ -54,6 +76,7 @@ const CustomSidebar = () => {
         </a>
       </Sidebar.CTA>
     </Sidebar>
+    </Wallet>
   )
 }
 
