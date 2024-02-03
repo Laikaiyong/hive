@@ -5,7 +5,7 @@ import { Sidebar, Badge } from "flowbite-react";
 import { useConnection, useWallet } from "@solana/wallet-adapter-react";
 
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import { Wallet } from "./connect-wallet-context";
+
 import { WalletNotConnectedError } from "@solana/wallet-adapter-base";
 import {
   clusterApiUrl,
@@ -22,18 +22,17 @@ const CustomSidebar = () => {
 
 
   return (
-    <Wallet>
     <Sidebar id="sidebar" className="fixed top-0 left-0 z-20 flex flex-col flex-shrink-0 w-64 h-full font-normal duration-75 lg:flex transition-width" aria-label="Sidebar">
-    <Sidebar.Logo href="/" img="../images/hive.png" imgAlt="hive logo">
+    <Sidebar.Logo href="/">Hive
       </Sidebar.Logo>
       <WalletMultiButton />
-      
+      <div className="my-6"></div>
       <Sidebar.Items>
         <Sidebar.ItemGroup>
           <Sidebar.Item href="/" icon={HiChartPie}>
             Dashboard
           </Sidebar.Item>
-          <Sidebar.Item href="/hots" icon={HiInbox}>
+          <Sidebar.Item href="/leaderboard" icon={HiInbox}>
             Leaderboard
           </Sidebar.Item>
           <Sidebar.Item href="/profile" icon={HiUser}>
@@ -65,18 +64,11 @@ const CustomSidebar = () => {
           </button>
         </div>
         <div className="mb-3 text-sm text-cyan-900 dark:text-gray-400">
-          Preview the new Flowbite dashboard navigation! You can turn the new navigation off for a limited time in your
-          profile.
+          hive News Beta version, development in progress!
         </div>
-        <a
-          className="text-sm text-cyan-900 underline hover:text-cyan-800 dark:text-gray-400 dark:hover:text-gray-300"
-          href="#"
-        >
-          Turn new navigation off
-        </a>
       </Sidebar.CTA>
     </Sidebar>
-    </Wallet>
+
   )
 }
 

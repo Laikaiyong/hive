@@ -1,273 +1,319 @@
 import * as React from "react";
-import { HiArrowSmRight, HiChartPie, HiInbox, HiShoppingBag, HiTable, HiUser } from 'react-icons/hi';
 
-import { Accordion, Carousel, Card, Sidebar, Badge, Timeline } from "flowbite-react";
+import { Card, Badge, ToggleSwitch, PictureUploader } from "flowbite-react";
 import CustomSidebar from "../components/custom-sidebar";
 
-const pageStyles = {
-  color: "#232129",
-  padding: 96,
-  fontFamily: "-apple-system, Roboto, sans-serif, serif",
-};
-const headingStyles = {
-  marginTop: 0,
-  marginBottom: 64,
-  maxWidth: 320,
-};
-const headingAccentStyles = {
-  color: "#663399",
-};
-const paragraphStyles = {
-  marginBottom: 48,
-};
-const codeStyles = {
-  color: "#8A6534",
-  padding: 4,
-  backgroundColor: "#FFF4DB",
-  fontSize: "1.25rem",
-  borderRadius: 4,
-};
-const listStyles = {
-  marginBottom: 96,
-  paddingLeft: 0,
-};
-const listItemStyles = {
-  fontWeight: 300,
-  fontSize: 24,
-  maxWidth: 560,
-  marginBottom: 30,
-};
-
-const linkStyle = {
-  color: "#8954A8",
-  fontWeight: "bold",
-  fontSize: 16,
-  verticalAlign: "5%",
-};
-
-const docLinkStyle = {
-  ...linkStyle,
-  listStyleType: "none",
-  marginBottom: 24,
-};
-
-const descriptionStyle = {
-  color: "#232129",
-  fontSize: 14,
-  marginTop: 10,
-  marginBottom: 0,
-  lineHeight: 1.25,
-};
-
-const docLink = {
-  text: "Documentation",
-  url: "https://www.gatsbyjs.com/docs/",
-  color: "#8954A8",
-};
-
-const badgeStyle = {
-  color: "#fff",
-  backgroundColor: "#088413",
-  border: "1px solid #088413",
-  fontSize: 11,
-  fontWeight: "bold",
-  letterSpacing: 1,
-  borderRadius: 4,
-  padding: "4px 6px",
-  display: "inline-block",
-  position: "relative",
-  top: -2,
-  marginLeft: 10,
-  lineHeight: 1,
-};
-
-const links = [
-  {
-    text: "Tutorial",
-    url: "https://www.gatsbyjs.com/docs/tutorial/",
-    description:
-      "A great place to get started if you're new to web development. Designed to guide you through setting up your first Gatsby site.",
-    color: "#E95800",
-  },
-  {
-    text: "How to Guides",
-    url: "https://www.gatsbyjs.com/docs/how-to/",
-    description:
-      "Practical step-by-step guides to help you achieve a specific goal. Most useful when you're trying to get something done.",
-    color: "#1099A8",
-  },
-  {
-    text: "Reference Guides",
-    url: "https://www.gatsbyjs.com/docs/reference/",
-    description:
-      "Nitty-gritty technical descriptions of how Gatsby works. Most useful when you need detailed information about Gatsby's APIs.",
-    color: "#BC027F",
-  },
-  {
-    text: "Conceptual Guides",
-    url: "https://www.gatsbyjs.com/docs/conceptual/",
-    description:
-      "Big-picture explanations of higher-level Gatsby concepts. Most useful for building understanding of a particular topic.",
-    color: "#0D96F2",
-  },
-  {
-    text: "Plugin Library",
-    url: "https://www.gatsbyjs.com/plugins",
-    description:
-      "Add functionality and customize your Gatsby site or app with thousands of plugins built by our amazing developer community.",
-    color: "#8EB814",
-  },
-  {
-    text: "Build and Host",
-    url: "https://www.gatsbyjs.com/cloud",
-    badge: true,
-    description:
-      "Now you’re ready to show the world! Give your Gatsby site superpowers: Build and host on Gatsby Cloud. Get started for free!",
-    color: "#663399",
-  },
-];
-
-const IndexPage = () => {
+const ProfilePage = () => {
   return (
     <main>
-    <CustomSidebar />
-    <div className="pl-60 ml-10 items-center">
-      <div className="h-56 sm:h-64 xl:h-80 2xl:h-96">
-        <Carousel>
-          <img
-            src="https://flowbite.com/docs/images/carousel/carousel-1.svg"
-            alt="..."
-          />
-          <img
-            src="https://flowbite.com/docs/images/carousel/carousel-2.svg"
-            alt="..."
-          />
-          <img
-            src="https://flowbite.com/docs/images/carousel/carousel-3.svg"
-            alt="..."
-          />
-          <img
-            src="https://flowbite.com/docs/images/carousel/carousel-4.svg"
-            alt="..."
-          />
-          <img
-            src="https://flowbite.com/docs/images/carousel/carousel-5.svg"
-            alt="..."
-          />
-        </Carousel>
-      </div>
-      <div className="grid grid-cols-2">
-      <Timeline className="mx-10 my-4">
-      <Timeline.Item>
-        <Timeline.Point />
-        <Timeline.Content>
-          <Timeline.Time>February 2022</Timeline.Time>
-          <Timeline.Title>Application UI code in Tailwind CSS</Timeline.Title>
-          <Timeline.Body>
-          <Card
-        className="max-w-sm"
-        imgAlt="Meaningful alt text for an image that is not purely decorative"
-        imgSrc="/images/blog/image-1.jpg"
-      >
-        <h5 className="text-2xl font-bold tracking-tight text-gray-900 dark:text-white">
-          Noteworthy technology acquisitions 2021
-        </h5>
-        <p className="font-normal text-gray-700 dark:text-gray-400">
-          Here are the biggest enterprise technology acquisitions of 2021 so far, in reverse chronological order.
-        </p>
-        <div className="mt-4 flex space-x-3 lg:mt-6">
-          <a
-            href="#"
-            className="inline-flex items-center rounded-lg bg-cyan-700 px-4 py-2 text-center text-sm font-medium text-white hover:bg-cyan-800 focus:outline-none focus:ring-4 focus:ring-cyan-300 dark:bg-cyan-600 dark:hover:bg-cyan-700 dark:focus:ring-cyan-800"
-          >
-            Add friend
-          </a>
-          <a
-            href="#"
-            className="inline-flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-center text-sm font-medium text-gray-900 hover:bg-gray-100 focus:outline-none focus:ring-4 focus:ring-gray-200 dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:border-gray-700 dark:hover:bg-gray-700 dark:focus:ring-gray-700"
-          >
-            Message
-          </a>
+      <CustomSidebar />
+      <div className="ml-80">
+      <h2 class="mb-4 text-4xl tracking-tight font-extrabold text-gray-900 dark:text-white">
+          Profile
+        </h2>
+        <div class="grid grid-cols-1 px-4 pt-6 xl:grid-cols-3 xl:gap-4 dark:bg-gray-900">
+          <div class="mb-4 col-span-full xl:mb-2">
+          </div>
+          <div class="col-span-full xl:col-auto">
+          <Card>
+            <h2 class="text-2xl font-semibold dark:text-white">
+              Recent Contributions
+            </h2>
+            <ul class="space-y-4">
+              <li class="flex justify-between items-center p-4 text-l">
+                <span class="flex-grow w-1/4 pr-4">Ref No.</span>
+                <span class="flex-grow w-1/4">Type</span>
+                <span class="flex-grow w-1/4">Date</span>
+                <span class="flex-grow w-1/4">Points Earned</span>
+              </li>
+              <li class="flex justify-between items-center p-4">
+                <span class="flex-grow w-1/4 pr-4">001</span>
+                <span class="flex-grow w-1/4">News Vote</span>
+                <span class="flex-grow w-1/4">02/10/24</span>
+                <span class="flex-grow w-1/4">+12</span>
+              </li>
+              <li class="flex justify-between items-center p-4">
+                <span class="flex-grow w-1/4 pr-4">002</span>
+                <span class="flex-grow w-1/4">News Upload</span>
+                <span class="flex-grow w-1/4">02/12/24</span>
+                <span class="flex-grow w-1/4">+50</span>
+              </li>
+              <li class="flex justify-between items-center p-4">
+                <span class="flex-grow w-1/4 pr-4">003</span>
+                <span class="flex-grow w-1/4">News Vote</span>
+                <span class="flex-grow w-1/4">02/15/24</span>
+                <span class="flex-grow w-1/4">+7</span>
+              </li>
+            </ul>
+            </Card>
+           
+            <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+              <h3 class="mb-4 text-xl font-semibold dark:text-white">
+                Language & Time
+              </h3>
+              <div class="mb-4">
+                <label
+                  for="settings-language"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Select language
+                </label>
+                <select
+                  id="settings-language"
+                  name="countries"
+                  class="bg-gray-50 border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  <option>English (US)</option>
+                  <option>Italiano</option>
+                  <option>Français (France)</option>
+                  <option>正體字</option>
+                  <option>Español (España)</option>
+                  <option>Deutsch</option>
+                  <option>Português (Brasil)</option>
+                </select>
+              </div>
+              <div class="mb-6">
+                <label
+                  for="settings-timezone"
+                  class="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
+                  Time Zone
+                </label>
+                <select
+                  id="settings-timezone"
+                  name="countries"
+                  class="bg-gray-50 border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                  <option>GMT+0 Greenwich Mean Time (GMT)</option>
+                  <option>GMT+1 Central European Time (CET)</option>
+                  <option>GMT+2 Eastern European Time (EET)</option>
+                  <option>GMT+3 Moscow Time (MSK)</option>
+                  <option>GMT+5 Pakistan Standard Time (PKT)</option>
+                  <option>GMT+8 China Standard Time (CST)</option>
+                  <option>GMT+10 Eastern Australia Standard Time (AEST)</option>
+                </select>
+              </div>
+              <div>
+                <button class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  Save all
+                </button>
+              </div>
+            </div>
+            <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+              <div class="flow-root">
+                <h3 class="text-xl font-semibold dark:text-white">
+                  Social accounts
+                </h3>
+                <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                  <li class="py-4">
+                    <div class="flex items-center space-x-4">
+                      <div class="flex-1 min-w-0">
+                        <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                          X Account
+                        </span>
+                        <a
+                          href="#"
+                          class="block text-sm font-normal truncate text-primary-700 hover:underline dark:text-primary-500">
+                          www.twitter.com/diaodun
+                        </a>
+                      </div>
+                      <div class="inline-flex items-center">
+                        <a
+                          href="#"
+                          class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                          Disconnect
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="py-4">
+                    <div class="flex items-center space-x-4">
+                      <div class="flex-1 min-w-0">
+                        <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                          Phantom Account
+                        </span>
+                        <span class="block text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                          Not connected
+                        </span>
+                      </div>
+                      <div class="inline-flex items-center">
+                        <a
+                          href="#"
+                          class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                          Connect
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="pt-4 pb-6">
+                    <div class="flex items-center space-x-4">
+                      <div class="flex-1 min-w-0">
+                        <span class="block text-base font-semibold text-gray-900 truncate dark:text-white">
+                          Metamask Account
+                        </span>
+                        <span class="block text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                          Not connected
+                        </span>
+                      </div>
+                      <div class="inline-flex items-center">
+                        <a
+                          href="#"
+                          class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-white rounded-lg bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                          Connect
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+                <div>
+                  <button class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                    Save all
+                  </button>
+                </div>
+              </div>
+              </div>
+          </div>
+          <div class="col-span-2">
+          <Card>
+            <img className="h-40 w-full object-contain" src="https://media.licdn.com/dms/image/C5603AQEk0KyIrKivVA/profile-displayphoto-shrink_100_100/0/1664031374671?e=1712188800&v=beta&t=kyDVCCIb8CeuwoZUtsNmAYmGV3bB8eC0-nEHpHR-ZaY"></img>
+            <div>
+              <h2 class="text-2xl font-semibold dark:text-white">0x_diaodun</h2>
+              <p class="italic">
+                "I love Ponzi Scams, memecoins and bull season NGMI serrr"
+              </p>
+              <p>Wallet Address: DnhmBBGMiK...NWqa</p>
+              <span class="bg-yellow-100 text-yellow-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded-full dark:bg-yellow-900 dark:text-yellow-300">
+                Top Voter
+              </span>
+            </div>
+          </Card>
+            <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm 2xl:col-span-2 dark:border-gray-700 sm:p-6 dark:bg-gray-800">
+              <div class="flow-root">
+                <h3 class="text-xl font-semibold dark:text-white">Sessions</h3>
+                <ul class="divide-y divide-gray-200 dark:divide-gray-700">
+                  <li class="py-4">
+                    <div class="flex items-center space-x-4">
+                      <div class="flex-shrink-0">
+                        <svg
+                          class="w-6 h-6 dark:text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
+                          California 123.123.123.123
+                        </p>
+                        <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                          Chrome on macOS
+                        </p>
+                      </div>
+                      <div class="inline-flex items-center">
+                        <a
+                          href="#"
+                          class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                          Revoke
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                  <li class="pt-4 pb-6">
+                    <div class="flex items-center space-x-4">
+                      <div class="flex-shrink-0">
+                        <svg
+                          class="w-6 h-6 dark:text-white"
+                          fill="none"
+                          stroke="currentColor"
+                          viewBox="0 0 24 24"
+                          xmlns="http://www.w3.org/2000/svg">
+                          <path
+                            stroke-linecap="round"
+                            stroke-linejoin="round"
+                            stroke-width="2"
+                            d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
+                        </svg>
+                      </div>
+                      <div class="flex-1 min-w-0">
+                        <p class="text-base font-semibold text-gray-900 truncate dark:text-white">
+                          Rome 24.456.355.98
+                        </p>
+                        <p class="text-sm font-normal text-gray-500 truncate dark:text-gray-400">
+                          Safari on iPhone
+                        </p>
+                      </div>
+                      <div class="inline-flex items-center">
+                        <a
+                          href="#"
+                          class="px-3 py-2 mb-3 mr-3 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:ring-primary-300 dark:bg-gray-800 dark:text-gray-400 dark:border-gray-600 dark:hover:text-white dark:hover:bg-gray-700">
+                          Revoke
+                        </a>
+                      </div>
+                    </div>
+                  </li>
+                </ul>
+              </div>
+            </div>
+            <div class="p-4 mb-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:border-gray-700 sm:p-6 dark:bg-gray-800 xl:mb-0">
+            <div class="flow-root">
+              <h3 class="text-xl font-semibold dark:text-white">
+                Alerts & Notifications
+              </h3>
+              <p class="text-sm font-normal text-gray-500 dark:text-gray-400">
+                You can set up Hive to receive personalized notifications
+              </p>
+              <div class="divide-y divide-gray-200 dark:divide-gray-700">
+                <div class="flex items-center justify-between py-4">
+                  <div class="flex flex-col flex-grow">
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Followed News
+                    </div>
+                    <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                      Get notified about your following users' activities.
+                    </div>
+                  </div>
+                  <ToggleSwitch id="company-news" />
+                </div>
+                <div class="flex items-center justify-between py-4">
+                  <div class="flex flex-col flex-grow">
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                      Post Activity
+                    </div>
+                    <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                      Get notified when your news are upvoted or downvoted.
+                    </div>
+                  </div>
+                  <ToggleSwitch id="account-activity" checked />
+                </div>
+                <div class="flex items-center justify-between pt-4">
+                  <div class="flex flex-col flex-grow">
+                    <div class="text-lg font-semibold text-gray-900 dark:text-white">
+                      News Alert
+                    </div>
+                    <div class="text-base font-normal text-gray-500 dark:text-gray-400">
+                      Get alerted when new news are uploaded.
+                    </div>
+                  </div>
+                  <ToggleSwitch id="new-messages" />
+                </div>
+              </div>
+              <div class="mt-6">
+                <button class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-primary-600 dark:hover:bg-primary-700 dark:focus:ring-primary-800">
+                  Save all
+                </button>
+              </div>
+            </div>
+            </div>
+          </div>
         </div>
-      </Card>
-      </Timeline.Body>
-        </Timeline.Content>
-      </Timeline.Item>
-    </Timeline>
-    <Accordion className="mx-10 my-4">
-      <Accordion.Panel>
-        <Accordion.Title>What is Flowbite?</Accordion.Title>
-        <Accordion.Content>
-          <p className="mb-2 text-gray-500 dark:text-gray-400">
-            Flowbite is an open-source library of interactive components built on top of Tailwind CSS including buttons,
-            dropdowns, modals, navbars, and more.
-          </p>
-          <p className="text-gray-500 dark:text-gray-400">
-            Check out this guide to learn how to&nbsp;
-            <a
-              href="https://flowbite.com/docs/getting-started/introduction/"
-              className="text-cyan-600 hover:underline dark:text-cyan-500"
-            >
-              get started&nbsp;
-            </a>
-            and start developing websites even faster with components on top of Tailwind CSS.
-          </p>
-        </Accordion.Content>
-      </Accordion.Panel>
-      <Accordion.Panel>
-        <Accordion.Title>Is there a Figma file available?</Accordion.Title>
-        <Accordion.Content>
-          <p className="mb-2 text-gray-500 dark:text-gray-400">
-            Flowbite is first conceptualized and designed using the Figma software so everything you see in the library
-            has a design equivalent in our Figma file.
-          </p>
-          <p className="text-gray-500 dark:text-gray-400">
-            Check out the
-            <a href="https://flowbite.com/figma/" className="text-cyan-600 hover:underline dark:text-cyan-500">
-              Figma design system
-            </a>
-            based on the utility classes from Tailwind CSS and components from Flowbite.
-          </p>
-        </Accordion.Content>
-      </Accordion.Panel>
-      <Accordion.Panel>
-        <Accordion.Title>What are the differences between Flowbite and Tailwind UI?</Accordion.Title>
-        <Accordion.Content>
-          <p className="mb-2 text-gray-500 dark:text-gray-400">
-            The main difference is that the core components from Flowbite are open source under the MIT license, whereas
-            Tailwind UI is a paid product. Another difference is that Flowbite relies on smaller and standalone
-            components, whereas Tailwind UI offers sections of pages.
-          </p>
-          <p className="mb-2 text-gray-500 dark:text-gray-400">
-            However, we actually recommend using both Flowbite, Flowbite Pro, and even Tailwind UI as there is no
-            technical reason stopping you from using the best of two worlds.
-          </p>
-          <p className="mb-2 text-gray-500 dark:text-gray-400">Learn more about these technologies:</p>
-          <ul className="list-disc pl-5 text-gray-500 dark:text-gray-400">
-            <li>
-              <a href="https://flowbite.com/pro/" className="text-cyan-600 hover:underline dark:text-cyan-500">
-                Flowbite Pro
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://tailwindui.com/"
-                rel="nofollow"
-                className="text-cyan-600 hover:underline dark:text-cyan-500"
-              >
-                Tailwind UI
-              </a>
-            </li>
-          </ul>
-        </Accordion.Content>
-      </Accordion.Panel>
-    </Accordion>
-    </div>
+
       </div>
     </main>
   );
 };
 
-export default IndexPage;
+export default ProfilePage;
 
-export const Head = () => <title>Home Page</title>;
+export const Head = () => <title>Profile</title>;

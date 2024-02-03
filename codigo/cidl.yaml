@@ -3,8 +3,7 @@ info:
   name: hive_news
   title: hive News
   version: 0.0.1
-  summary: |
-    The purpose of this contract is to track the upvote and downvote action in the news decentralized authenticable application. It will manage user, news and votes for the solution.
+  summary: The purpose of this contract is to track the upvote and downvote action in the news decentralized authenticable application. It will manage user, news and votes for the solution.
   contact:
     name: Vandyck Lai
     web: https://vandycklai.dev

@@ -4,13 +4,10 @@ name = "hive_news"
 version = "0.0.1"
 edition = "2021"
 license = "mit"
-publish = false
+publish = true
 
 authors = ["Vandyck Lai <vandycklai@gmail.com>"]
-description = """
-The purpose of this contract is to track the upvote and downvote action in the news decentralized authenticable application. It will manage user, news and votes for the solution.
-
-"""
+description = "The purpose of this contract is to track the upvote and downvote action in the news decentralized authenticable application. It will manage user, news and votes for the solution."
 homepage = "https://vandycklai.dev"
 repository = "https://github.com/Laikaiyong"
 

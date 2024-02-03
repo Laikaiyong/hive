@@ -19,7 +19,7 @@ import {
 
 import '@solana/wallet-adapter-react-ui/styles.css';
 
-export const Wallet = ({ children }) => {
+const Wallet = ({ children }) => {
     // The network can be set to 'devnet', 'testnet', or 'mainnet-beta'.
     const network = WalletAdapterNetwork.Devnet;
 
@@ -64,3 +64,5 @@ export const Wallet = ({ children }) => {
         </ConnectionProvider>
     );
 };
+
+export default Wallet;
