@@ -18,7 +18,7 @@ import {
 export async function GET(request: Request) {
   const url = new URL(request.url);
   const payload: ActionGetResponse = {
-    icon: "/images/icon.png", // Local icon path
+    icon: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS7dPPWr-BRKzBy_Fig0v_snt-_onQj9Pl5xA&s", // Local icon path
     title: "Upvote to Hive",
     description: "Upvote to Hive using SOL.",
     label: "Upvote",
